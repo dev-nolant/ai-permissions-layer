@@ -5,3 +5,4 @@ export * from './middleware.js';
 export * from './llm-adapter.js';
 export * from './rules.js';
 export * from './path-protection.js';
+export { createOpenClawAdapter } from './adapters/openclaw-adapter.js';

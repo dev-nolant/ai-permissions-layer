@@ -18,6 +18,7 @@ export async function compile(
 ): Promise<{ rules: CompiledRule[] }> {
   const prompt = `${COMPILER_PROMPT}\n\nUser rules:\n${plainTextRules.map((r) => `- ${r}`).join('\n')}`;
   const raw = await llm.complete(prompt);
-  const parsed = JSON.parse(raw) as { rules: CompiledRule[] };
+  const stripped = raw.replace(/^```(?:json)?\s*\n?|\n?```\s*$/g, '').trim();
+  const parsed = JSON.parse(stripped) as { rules: CompiledRule[] };
   return { rules: parsed.rules };
 }

@@ -8,6 +8,8 @@
 
 import {
   match,
+  compile,
+  createOpenClawAdapter,
   isProtectedPathViolation,
   OPENCLAW_DANGEROUS_TOOLS,
   DEFAULT_PROTECTED_PATTERNS,
@@ -15,7 +17,7 @@ import {
   type DefaultWhenNoMatch,
   type PathProtectionConfig,
 } from 'ai-permissions-layer';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import {
@@ -40,6 +42,15 @@ function resolvePath(p: string): string {
   }
   return path.resolve(p);
 }
+
+const DEFAULT_RULES_YAML = resolvePath('~/.openclaw/rules.yaml');
+
+const STARTER_RULES = `# AI Permissions - edit and run: openclaw ai-permissions compile
+- block gmail.delete and gmail.batchDelete - never auto-delete emails
+- require approval before exec, bash, or process - ask before running commands
+- require approval before write, edit, apply_patch - ask before file changes
+- allow read, search, list - safe read-only operations
+`;
 
 function loadRules(rulesPath: string): CompiledRule[] {
   const resolved = resolvePath(rulesPath);
@@ -151,6 +162,10 @@ export default function aiPermissionsPlugin(api: {
   const apiAny = api as {
     on?: (h: string, fn: (...a: unknown[]) => unknown) => void;
     registerHook?: (h: string, fn: (...a: unknown[]) => unknown) => void;
+    registerCli?: (
+      fn: (opts: { program: { command: (name: string) => { command: (spec: string) => { action: (fn: (...a: unknown[]) => void) => void } } } }) => void,
+      opts: { commands: string[] }
+    ) => void;
   };
   if (typeof apiAny.on === 'function') {
     apiAny.on('before_tool_call', hookHandler);
@@ -160,6 +175,44 @@ export default function aiPermissionsPlugin(api: {
     apiAny.registerHook('message_received', messageReceivedHandler);
   } else {
     logger.warn('[ai-permissions-openclaw] No hook API found (api.on or api.registerHook)');
+  }
+
+  if (typeof apiAny.registerCli === 'function') {
+    const compileHandler = async (input?: string, output?: string) => {
+      const inputPath = input ? resolvePath(input) : DEFAULT_RULES_YAML;
+      const outputPath = output ? resolvePath(output) : resolvePath(config.rulesPath);
+      if (!existsSync(inputPath)) {
+        if (!input) {
+          writeFileSync(DEFAULT_RULES_YAML, STARTER_RULES);
+          console.log(`Created ${DEFAULT_RULES_YAML} with starter rules.`);
+        } else {
+          console.error(`Input file not found: ${inputPath}`);
+          process.exit(1);
+        }
+      }
+      const llm = createOpenClawAdapter(process.env.OPENAI_API_KEY);
+      if (!llm) {
+        console.error('OpenClaw config not found or model unresolved. Run openclaw onboard first.');
+        process.exit(1);
+      }
+      const content = readFileSync(inputPath, 'utf-8');
+      const rules = content
+        .split('\n')
+        .filter((l) => l.trim().startsWith('-'))
+        .map((l) => l.replace(/^-\s*["']?|["']?$/g, '').trim());
+      const { rules: compiled } = await compile(rules, llm);
+      writeFileSync(outputPath, JSON.stringify({ rules: compiled }, null, 2));
+      console.log(`Compiled ${compiled.length} rules to ${outputPath}`);
+    };
+    apiAny.registerCli(
+      (opts: { program: { command: (n: string) => unknown } }) => {
+        const ap = opts.program.command('ai-permissions') as { command: (s: string) => { action: (fn: (a?: string, b?: string) => void) => void } };
+        ap.command('compile [input] [output]').action((a?: string, b?: string) => {
+          void compileHandler(a, b);
+        });
+      },
+      { commands: ['ai-permissions'] }
+    );
   }
 
   logger.info('[ai-permissions-openclaw] Plugin loaded - tool call interception active');
