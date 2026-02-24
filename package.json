@@ -1,6 +1,6 @@
 {
   "name": "ai-permissions-layer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Offline-first middleware for AI agent tool call permissions. Intercepts tool calls, applies rules, returns ALLOW | BLOCK | REQUIRES_APPROVAL.",
   "type": "module",
   "main": "dist/index.js",
