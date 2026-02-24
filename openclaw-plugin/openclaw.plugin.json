@@ -1,0 +1,44 @@
+{
+  "id": "ai-permissions-openclaw",
+  "name": "AI Permissions Layer",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "rulesPath": {
+        "type": "string",
+        "default": "~/.openclaw/ai-permissions-rules.json",
+        "description": "Path to compiled rules JSON file"
+      },
+      "defaultWhenNoMatch": {
+        "type": "string",
+        "enum": [
+          "allow",
+          "require_approval",
+          "block"
+        ],
+        "default": "require_approval",
+        "description": "Behavior when no rule matches: allow (permit), require_approval (ask), block (deny)"
+      },
+      "pathProtection": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          },
+          "dangerousTools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tool names that can write files (default: write, edit, apply_patch)"
+          }
+        },
+        "default": {
+          "enabled": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "ai-permissions-layer",
+  "version": "0.1.0",
+  "description": "Offline-first middleware for AI agent tool call permissions. Intercepts tool calls, applies rules, returns ALLOW | BLOCK | REQUIRES_APPROVAL.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "ai-permissions-compile": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build:plugin": "npm run build && cd openclaw-plugin && npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/ai-permissions-layer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/ai-permissions-layer/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/ai-permissions-layer#readme",
+  "keywords": [
+    "ai",
+    "permissions",
+    "middleware",
+    "openclaw",
+    "tool-calls",
+    "agent",
+    "llm"
+  ],
+  "license": "GPL-3.0-or-later",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "minimatch": "^10.2.2"
+  }
+}

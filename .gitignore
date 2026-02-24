@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+*.compiled.json
+*.tsbuildinfo
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# IDE & editors
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs & debug
+*.log
+npm-debug.log*
+.npm
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temp & cache
+tmp/
+temp/
+.cache/
+*.tmp
+
+# Package manager
+.npmrc
+.yarnrc
+.pnp.*
+.yarn/
+
+# OpenClaw plugin
+openclaw-plugin/node_modules/
+openclaw-plugin/dist/

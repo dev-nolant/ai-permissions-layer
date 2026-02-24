@@ -1,0 +1,42 @@
+{
+  "name": "ai-permissions-openclaw",
+  "version": "0.1.0",
+  "description": "AI Permissions Layer plugin for OpenClaw. Intercepts tool calls, applies rules, approval flow via chat.",
+  "type": "module",
+  "main": "dist/index.js",
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist",
+    "openclaw.plugin.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/ai-permissions-layer.git",
+    "directory": "openclaw-plugin"
+  },
+  "keywords": [
+    "openclaw",
+    "ai",
+    "permissions",
+    "plugin"
+  ],
+  "license": "GPL-3.0-or-later",
+  "peerDependencies": {
+    "openclaw": ">=2026.1.0"
+  },
+  "dependencies": {
+    "ai-permissions-layer": "file:.."
+  },
+  "devDependencies": {
+    "openclaw": "latest",
+    "typescript": "^5.9.3"
+  }
+}

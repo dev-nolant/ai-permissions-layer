@@ -1,0 +1,34 @@
+{
+  "rules": [
+    {
+      "action": "block",
+      "tool": "gmail.delete",
+      "reason": "User: never auto-delete emails"
+    },
+    {
+      "action": "block",
+      "tool": "gmail.batchDelete",
+      "reason": "User: never auto-delete emails"
+    },
+    {
+      "action": "require_approval",
+      "tool": "exec",
+      "reason": "User: ask before running commands"
+    },
+    {
+      "action": "require_approval",
+      "tool": "write",
+      "reason": "User: ask before file changes"
+    },
+    {
+      "action": "allow",
+      "tool": "read",
+      "reason": "User: safe read-only operations"
+    },
+    {
+      "action": "allow",
+      "tool": "gmail.list",
+      "reason": "User: reading emails is fine"
+    }
+  ]
+}
