@@ -22,12 +22,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/ai-permissions-layer.git"
+    "url": "https://github.com/dev-nolant/ai-permissions-layer.git"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/ai-permissions-layer/issues"
+    "url": "https://github.com/dev-nolant/ai-permissions-layer/issues"
   },
-  "homepage": "https://github.com/YOUR_USERNAME/ai-permissions-layer#readme",
+  "homepage": "https://github.com/dev-nolant/ai-permissions-layer#readme",
   "keywords": [
     "ai",
     "permissions",
